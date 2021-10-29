@@ -1,13 +1,19 @@
+import {
+    MeshPhongMaterial, BoxGeometry, Mesh, Vector3, ObjectLoader, ImageUtils,
+    MeshLambertMaterial,
+} from 'three';
+import MTLLoader from 'three-mtl-loader';
+
 /**
  * The Avatar class
- * @author David Infante, Jose Ariza
+ * @author David Infante, Jose Ariza, Wei Ji
  */
 class Avatar {
 
     constructor(camera, scene) {
 
-        var mat = Physijs.createMaterial(new THREE.MeshPhongMaterial ({color: 0x000000}), 1, 0);
-        this.avatar = new THREE.Mesh (new THREE.BoxGeometry (5, 5, 5), mat);
+        var mat = Physijs.createMaterial(new MeshPhongMaterial({ color: 0x000000 }), 1, 0);
+        this.avatar = new Mesh(new BoxGeometry(5, 5, 5), mat);
         this.avatar.material.transparent = true;
         this.avatar.material.opacity = 0.0;
         this.avatar.position.y = 2.5;
@@ -26,7 +32,7 @@ class Avatar {
     }
 
     getPosition() {
-        var pos = new THREE.Vector3();
+        var pos = new Vector3();
         pos.x = this.avatar.position.x;
         pos.y = this.avatar.position.y;
         pos.z = this.avatar.position.z;
@@ -54,47 +60,47 @@ class Avatar {
     }
 
     updateControls() {
-        controls.getObject().position.set(this.avatar.position.x, this.avatar.position.y+5, this.avatar.position.z);
+        controls.getObject().position.set(this.avatar.position.x, this.avatar.position.y + 5, this.avatar.position.z);
     }
 
     moveForward() {
         var target = this.camera.getWorldDirection();
         var nextPosition = target.x + this.avatar.position.x;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateX( target.x );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateX(target.x);
         nextPosition = target.z + this.avatar.position.z;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateZ( target.z );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateZ(target.z);
     }
 
     moveBackward() {
         var target = this.camera.getWorldDirection();
         var nextPosition = -target.x + this.avatar.position.x;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateX( -target.x );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateX(-target.x);
         nextPosition = -target.z + this.avatar.position.z;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateZ( -target.z );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateZ(-target.z);
     }
 
     moveLeft() {
         var target = this.camera.getWorldDirection();
         var nextPosition = target.z + this.avatar.position.x;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateX( target.z );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateX(target.z);
         nextPosition = -target.x + this.avatar.position.z;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateZ( -target.x );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateZ(-target.x);
     }
 
     moveRight() {
         var target = this.camera.getWorldDirection();
         var nextPosition = -target.z + this.avatar.position.x;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateX( -target.z );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateX(-target.z);
         nextPosition = target.x + this.avatar.position.z;
-        if(nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
-            this.avatar.translateZ( target.x );
+        if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
+            this.avatar.translateZ(target.x);
     }
 
     changeWeapon() {
@@ -141,19 +147,19 @@ class Avatar {
         var thatCamera = this.camera;
         var that = this;
 
-        var mtlLoader = new THREE.MTLLoader();
-        var objLoader = new THREE.OBJLoader();
+        var mtlLoader = new MTLLoader();
+        var objLoader = new ObjectLoader();
         var texture = null;
 
-        mtlLoader.setPath( "models/" );
-        mtlLoader.load( "material.mtl" , function ( materials ) {
+        mtlLoader.setPath("models/");
+        mtlLoader.load("material.mtl", function (materials) {
             materials.preload();
-            
-            objLoader.setMaterials( materials );
-            objLoader.setPath( "models/" );
-            objLoader.load( "m4a1_s.obj", function ( object ) {
-                texture = THREE.ImageUtils.loadTexture('models/m4a1_stext.png');
-                object.children[1].material = new THREE.MeshLambertMaterial({map: texture});
+
+            objLoader.setMaterials(materials);
+            objLoader.setPath("models/");
+            objLoader.load("m4a1_s.obj", function (object) {
+                texture = ImageUtils.loadTexture('models/m4a1_stext.png');
+                object.children[1].material = new MeshLambertMaterial({ map: texture });
                 //m4a1_s
                 object.children[1].position.set(0, 0, 0);
                 object.children[1].scale.set(0.2, 0.2, 0.2);
@@ -166,21 +172,21 @@ class Avatar {
             });
         });
 
-        mtlLoader.setPath( "models/" );
-        mtlLoader.load( "material.mtl" , function ( materials ) {
+        mtlLoader.setPath("models/");
+        mtlLoader.load("material.mtl", function (materials) {
             materials.preload();
 
-            objLoader.setMaterials( materials );
-            objLoader.setPath( "models/" );
-            objLoader.load( "escopeta.obj", function ( object ) {
-                texture = THREE.ImageUtils.loadTexture('models/escopetatext.png');
-                object.children[0].material = new THREE.MeshLambertMaterial({map: texture});
-                
+            objLoader.setMaterials(materials);
+            objLoader.setPath("models/");
+            objLoader.load("escopeta.obj", function (object) {
+                texture = ImageUtils.loadTexture('models/escopetatext.png');
+                object.children[0].material = new MeshLambertMaterial({ map: texture });
+
                 //Escopeta
                 object.children[0].position.set(0, 0, 0);
                 object.children[0].scale.set(0.4, 0.4, 0.4);
                 object.children[0].rotation.set(0.2, -1.2, 0);
-                object.children[0].position.set(2, -1.4 , -6);
+                object.children[0].position.set(2, -1.4, -6);
                 object.children[0].material.transparent = true;
                 object.children[0].material.opacity = 0.0;
                 that.shotgun = object.children[0];
@@ -188,6 +194,7 @@ class Avatar {
 
             });
         });
-
     }
 }
+
+export default Avatar;

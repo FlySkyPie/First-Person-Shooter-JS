@@ -1,15 +1,26 @@
+import {
+  TextureLoader, MeshPhongMaterial, Vector3, AmbientLight, SpotLight, Object3D
+} from 'three';
+import { Scene as PhysijsScene } from 'physijs'
+
+import Avatar from './Avatar';
+import Bullets from './Bullets';
+import Crosshair from './Crosshair';
+import Enemies from './Enemies';
+import Map from './Map';
+import Skybox from './Skybox';
 
 /**
  * The Model Facade class. The root node of the graph.
  * @author David Infante, Jose Ariza, Wei Ji
  */
- 
-class TheScene extends Physijs.Scene {
-  
-  constructor (renderer, aCamera) {
+
+class Scene extends PhysijsScene {
+
+  constructor(renderer, aCamera) {
 
     super();
-    this.setGravity(new THREE.Vector3 (0, -50, 0));
+    this.setGravity(new Vector3(0, -50, 0));
 
     this.camera = aCamera;
     this.createCrosshair(renderer);
@@ -41,7 +52,7 @@ class TheScene extends Physijs.Scene {
 
     this.add(this.place);
   }
-  
+
   createHUD() {
     var score = document.createElement('div');
     score.id = "score";
@@ -85,7 +96,7 @@ class TheScene extends Physijs.Scene {
     text.innerHTML = "Munición: " + this.actualAmmo;
   }
 
-  updateScore(newScore){
+  updateScore(newScore) {
     var text = document.getElementById("score");
     this.score += newScore;
     text.innerHTML = "Puntuacion: " + this.score;
@@ -103,7 +114,7 @@ class TheScene extends Physijs.Scene {
   createCrosshair(renderer) {
     // Create the Crosshair
     var crosshair = new Crosshair();
-    this.camera.add( crosshair );
+    this.camera.add(crosshair);
 
     // Place it in the center
     var crosshairPercentX = 50;
@@ -114,7 +125,7 @@ class TheScene extends Physijs.Scene {
   }
 
   dispara() {
-    if(this.index >= this.maxBullets) {
+    if (this.index >= this.maxBullets) {
       this.index = 0;
       this.bullets.reload();
     }
@@ -125,30 +136,30 @@ class TheScene extends Physijs.Scene {
       this.updateAmmo();
     }
   }
-  
+
   /// It creates lights and adds them to the graph
   createLights() {
     // add subtle ambient lighting
-    this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
-    this.add (this.ambientLight);
-    
+    this.ambientLight = new AmbientLight(0xccddee, 0.35);
+    this.add(this.ambientLight);
+
     // add spotlight for the shadows
-    this.spotLight = new THREE.SpotLight( 0xffffff );
-    this.spotLight.position.set( 0, 500, 1000 );
+    this.spotLight = new SpotLight(0xffffff);
+    this.spotLight.position.set(0, 500, 1000);
     this.spotLight.intensity = 1;
     this.spotLight.castShadow = true;
     // the shadow resolution
-    this.spotLight.shadow.mapSize.width=2048;
-    this.spotLight.shadow.mapSize.height=2048;
-    this.add (this.spotLight);
+    this.spotLight.shadow.mapSize.width = 2048;
+    this.spotLight.shadow.mapSize.height = 2048;
+    this.add(this.spotLight);
   }
-  
+
   /// It creates the place
   /**
    * @return place
    */
   createPlace() {
-    var place = new THREE.Object3D();    
+    var place = new Object3D();
 
     this.skybox = new Skybox();
     place.add(this.skybox);
@@ -175,9 +186,9 @@ class TheScene extends Physijs.Scene {
    *
    */
   createBullets() {
-    var loader = new THREE.TextureLoader();
-    var textura = loader.load ("imgs/bullettext.jpg");
-    this.bullets = new Bullets(this.maxBullets, this, (new THREE.MeshPhongMaterial ({map: textura})));
+    var loader = new TextureLoader();
+    var textura = loader.load("imgs/bullettext.jpg");
+    this.bullets = new Bullets(this.maxBullets, this, (new MeshPhongMaterial({ map: textura })));
   }
 
   /// It creates the enemies
@@ -191,7 +202,7 @@ class TheScene extends Physijs.Scene {
   endGame() {
     enableControls = false;
     controls.enabled = false;
-    
+
     moveForward = false;
     moveBackward = false;
     moveLeft = false;
@@ -204,12 +215,12 @@ class TheScene extends Physijs.Scene {
 
     instructions.innerHTML = "Puntuacion total: " + this.score + ", pulsa la tecla P para jugar otra partida.";
   }
-  
+
   /// 
   /**
    * @controls - The GUI information
    */
-  animate () {
+  animate() {
     this.simulate();
 
     if (moveForward) this.avatar.moveForward();
@@ -242,31 +253,31 @@ class TheScene extends Physijs.Scene {
   /**
    * @return The camera
    */
-  getCamera () {
+  getCamera() {
     return this.camera;
   }
-  
+
   /// It returns the camera controls
   /**
    * @return The camera controls
    */
-  getCameraControls () {
+  getCameraControls() {
     return this.controls;
   }
-  
+
   /// It updates the aspect ratio of the camera
   /**
    * @param anAspectRatio - The new aspect ratio for the camera
    */
-  setCameraAspect (anAspectRatio) {
+  setCameraAspect(anAspectRatio) {
     this.camera.aspect = anAspectRatio;
     this.camera.updateProjectionMatrix();
   }
-  
+
   newLevel() {
     this.avatar.setInitialPosition();
 
-    if(this.score - this.lastScore != 40)
+    if (this.score - this.lastScore != 40)
       this.score = this.lastScore + 40;
 
     this.updateLevel();
@@ -298,3 +309,4 @@ class TheScene extends Physijs.Scene {
 
 }
 
+export default Scene;
