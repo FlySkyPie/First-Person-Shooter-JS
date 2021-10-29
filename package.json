@@ -20,14 +20,28 @@
   },
   "homepage": "https://github.com/FlySkyPie/First-Person-Shooter-JS#readme",
   "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-export-default-from": "^7.14.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.15.4",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/runtime": "^7.15.4",
+    "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^9.0.1",
+    "core-js": "^3.19.0",
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.60.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0"
+    "webpack-dev-server": "^4.4.0",
+    "webworkify": "^1.5.0"
   },
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.15.4",
+    "howler": "^2.2.3",
     "physijs": "^1.0.4",
+    "physijs-webpack": "^0.1.4",
+    "stats.js": "^0.17.0",
     "three": "^0.134.0",
     "three-mtl-loader": "^1.0.2",
     "worker-loader": "^3.0.8"

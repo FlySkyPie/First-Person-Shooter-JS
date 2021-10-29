@@ -1,7 +1,10 @@
 import {
   Vector3, BoxGeometry, Matrix4, TextureLoader, MeshPhongMaterial,
 } from 'three';
-import { BoxMesh, createMaterial } from 'physijs'
+import { BoxMesh, createMaterial } from 'physijs-webpack/browserify'
+//import { BoxMesh, createMaterial } from 'physijs'
+import { Howl } from 'howler';
+
 /**
  * The Enemies class
  * @author David Infante, Jose Ariza, Wei Ji

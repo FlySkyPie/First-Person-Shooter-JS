@@ -2,7 +2,6 @@ import {
   Object3D, LineBasicMaterial, Mesh, BoxGeometry, Matrix4,
 } from 'three';
 
-
 /**
  * @author David Infante, Jose Ariza, Wei Ji
  */

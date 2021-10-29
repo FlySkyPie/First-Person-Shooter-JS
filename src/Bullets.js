@@ -1,7 +1,9 @@
 import {
     Vector3, SphereGeometry,
 } from 'three';
-import {SphereMesh} from 'physijs'
+import { SphereMesh, Scene } from 'physijs-webpack/browserify'
+//import { SphereMesh, Scene } from 'physijs'
+import { Howl } from 'howler';
 
 /**
  * The flying object class
@@ -12,7 +14,7 @@ class Bullets {
 
     /**
      * @param {*} maxBullets 
-     * @param {*} scene 
+     * @param {Scene} scene 
      * @param {THREE.Material} aMaterial 
      */
     constructor(maxBullets, scene, aMaterial) {
@@ -47,17 +49,17 @@ class Bullets {
     }
 
     reload() {
-        for (var i = 0; i < this.maxBullets; ++i) {
+        for (let i = 0; i < this.maxBullets; ++i) {
             this.bullets[i].remove();
             this.launched[i] = false;
             this.target[i] = new Vector3(0, 0, 0);
             this.bullets[i] = this.createObject(i);
-            scene.add(this.bullets[i]);
+            this.scene.add(this.bullets[i]);
         }
     }
 
     createObject(i) {
-        var bullet = new SphereMesh(new SphereGeometry(this.objWidth / 4, 20, 20), this.material, 50);
+        const bullet = new SphereMesh(new SphereGeometry(this.objWidth / 4, 20, 20), this.material, 50);
         bullet.position.set(i, -9.5, 0.0);
         bullet.castShadow = true;
         return bullet;
@@ -81,8 +83,8 @@ class Bullets {
         this.bullets[i].__dirtyPosition = true;
         this.launched[i] = true;
 
-        var potencia = null;
-        var sound = null;
+        const potencia = null;
+        const sound = null;
 
         if (weapon == 0) {
             potencia = 35000;
@@ -97,7 +99,7 @@ class Bullets {
             });
         }
 
-        var fuerza = new Vector3(this.target[i].x * potencia, this.target[i].y * potencia, this.target[i].z * potencia);
+        const fuerza = new Vector3(this.target[i].x * potencia, this.target[i].y * potencia, this.target[i].z * potencia);
         this.bullets[i].applyCentralImpulse(fuerza);
 
         sound.play();

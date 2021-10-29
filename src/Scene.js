@@ -1,7 +1,8 @@
 import {
   TextureLoader, MeshPhongMaterial, Vector3, AmbientLight, SpotLight, Object3D
 } from 'three';
-import { Scene as PhysijsScene } from 'physijs'
+import Physijs from 'physijs-webpack/browserify';
+//import Physijs from 'physijs'
 
 import Avatar from './Avatar';
 import Bullets from './Bullets';
@@ -9,27 +10,39 @@ import Crosshair from './Crosshair';
 import Enemies from './Enemies';
 import Map from './Map';
 import Skybox from './Skybox';
+import { updateAmmo, updateLevel, updateScore } from './misc';
 
 /**
  * The Model Facade class. The root node of the graph.
  * @author David Infante, Jose Ariza, Wei Ji
  */
 
-class Scene extends PhysijsScene {
+class Scene extends Physijs.Scene {
 
+  /**
+   * 
+   * @param {THREE.WebGLRenderer} renderer 
+   * @param {THREE.PerspectiveCamera} aCamera 
+   */
   constructor(renderer, aCamera) {
-
     super();
     this.setGravity(new Vector3(0, -50, 0));
 
+    /**
+     * @type {THREE.PerspectiveCamera}
+     */
     this.camera = aCamera;
     this.createCrosshair(renderer);
 
-    this.avatar = null;
+    this.avatar = new Avatar(this.camera, this);
+
+    /**
+     * @type {Map}
+     */
     this.map = null;
-    this.enemies = null;
+    this.enemies = new Enemies(this, this.level);
     this.skybox = null;
-    this.Bullets = null;
+    this.Bullets = this.createBullets();
     this.index = 0;
     this.maxBullets = 20;
     this.actualAmmo = 40; //Balas totales antes de acabar el juego
@@ -37,14 +50,8 @@ class Scene extends PhysijsScene {
     this.lastScore = 0;
     this.level = 1;
 
-    this.createHUD();
-
-    this.createAvatar();
     this.avatar.loadWeapons();
     this.place = this.createPlace();
-    this.createBullets();
-    this.createEnemies(this.level);
-
 
     this.ambientLight = null;
     this.spotLight = null;
@@ -53,63 +60,9 @@ class Scene extends PhysijsScene {
     this.add(this.place);
   }
 
-  createHUD() {
-    var score = document.createElement('div');
-    score.id = "score";
-    score.style.position = 'absolute';
-    score.style.width = 1;
-    score.style.height = 1;
-    score.innerHTML = "Puntuación: " + this.score;
-    score.style.top = 50 + 'px';
-    score.style.left = 50 + 'px';
-    score.style.fontSize = 50 + 'px';
-    score.style.color = "white";
-    document.body.appendChild(score);
-
-    var ammo = document.createElement('div');
-    ammo.id = "ammo";
-    ammo.style.position = 'absolute';
-    ammo.style.width = 1;
-    ammo.style.height = 1;
-    ammo.innerHTML = "Munición: " + this.actualAmmo;
-    ammo.style.top = 100 + 'px';
-    ammo.style.left = 50 + 'px';
-    ammo.style.fontSize = 50 + 'px';
-    ammo.style.color = "white";
-    document.body.appendChild(ammo);
-
-    var level = document.createElement('div');
-    level.id = "level";
-    level.style.position = 'absolute';
-    level.style.width = 1;
-    level.style.height = 1;
-    level.innerHTML = "Nivel: " + this.level;
-    level.style.top = 150 + 'px';
-    level.style.left = 50 + 'px';
-    level.style.fontSize = 50 + 'px';
-    level.style.color = "white";
-    document.body.appendChild(level);
-  }
-
-  updateAmmo() {
-    var text = document.getElementById("ammo");
-    text.innerHTML = "Munición: " + this.actualAmmo;
-  }
-
-  updateScore(newScore) {
-    var text = document.getElementById("score");
-    this.score += newScore;
-    text.innerHTML = "Puntuacion: " + this.score;
-  }
-
-  updateLevel() {
-    var level = document.getElementById("level");
-    level.innerHTML = "Nivel: " + this.level;
-  }
-
-  /// It creates the camera and adds it to the graph
   /**
-   * @param renderer - The renderer associated with the camera
+   * It creates the camera and adds it to the graph
+   * @param {THREE.WebGLRenderer} renderer The renderer associated with the camera
    */
   createCrosshair(renderer) {
     // Create the Crosshair
@@ -133,7 +86,7 @@ class Scene extends PhysijsScene {
       this.bullets.dispara(this.index, this.avatar.getPosition(), this.camera.getWorldDirection(), this.avatar.getActiveWeapon());
       this.index++;
       this.actualAmmo--;
-      this.updateAmmo();
+      updateAmmo();
     }
   }
 
@@ -173,30 +126,15 @@ class Scene extends PhysijsScene {
     return place;
   }
 
-  /// It creates the avatar
   /**
-   *
+   * It creates the bullets
+   * @private
+   * @param {number} maxBullets
    */
-  createAvatar() {
-    this.avatar = new Avatar(this.camera, this);
-  }
-
-  /// It creates the bullets
-  /**
-   *
-   */
-  createBullets() {
-    var loader = new TextureLoader();
-    var textura = loader.load("imgs/bullettext.jpg");
-    this.bullets = new Bullets(this.maxBullets, this, (new MeshPhongMaterial({ map: textura })));
-  }
-
-  /// It creates the enemies
-  /**
-   *
-   */
-  createEnemies() {
-    this.enemies = new Enemies(this, this.level);
+  createBullets(maxBullets) {
+    const loader = new TextureLoader();
+    const textura = loader.load("imgs/bullettext.jpg");
+    return new Bullets(maxBullets, this, (new MeshPhongMaterial({ map: textura })));
   }
 
   endGame() {
@@ -216,7 +154,6 @@ class Scene extends PhysijsScene {
     instructions.innerHTML = "Puntuacion total: " + this.score + ", pulsa la tecla P para jugar otra partida.";
   }
 
-  /// 
   /**
    * @controls - The GUI information
    */
@@ -249,24 +186,24 @@ class Scene extends PhysijsScene {
     this.avatar.changeWeapon();
   }
 
-  /// It returns the camera
   /**
+   * It returns the camera
    * @return The camera
    */
   getCamera() {
     return this.camera;
   }
 
-  /// It returns the camera controls
   /**
+   * It returns the camera controls
    * @return The camera controls
    */
   getCameraControls() {
     return this.controls;
   }
 
-  /// It updates the aspect ratio of the camera
   /**
+   * It updates the aspect ratio of the camera
    * @param anAspectRatio - The new aspect ratio for the camera
    */
   setCameraAspect(anAspectRatio) {
@@ -280,7 +217,7 @@ class Scene extends PhysijsScene {
     if (this.score - this.lastScore != 40)
       this.score = this.lastScore + 40;
 
-    this.updateLevel();
+    updateLevel();
 
     for (var i = 0; i < this.enemies.getEnemiesSize(); ++i) {
       this.remove(this.enemies.getEnemies(i));
@@ -295,18 +232,17 @@ class Scene extends PhysijsScene {
     controls.enabled = true;
     this.avatar.setInitialPosition();
     this.actualAmmo = 40;
-    this.updateAmmo();
+    updateAmmo();
     this.score = 0;
-    this.updateScore(0);
+    updateScore(0);
     this.level = 1;
-    this.updateLevel();
+    updateLevel();
 
     for (var i = 0; i < this.enemies.getEnemiesSize(); ++i) {
       this.remove(this.enemies.getEnemies(i));
     }
     this.createEnemies();
   }
-
 }
 
 export default Scene;
