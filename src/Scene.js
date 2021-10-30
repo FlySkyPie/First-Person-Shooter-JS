@@ -53,7 +53,7 @@ class Scene extends Physijs.Scene {
      */
     this.bullets = this.createBullets(this.maxBullets);
     this.index = 0;
-    
+
     this.actualAmmo = 40; //Balas totales antes de acabar el juego
     this.score = 0;
     this.lastScore = 0;
@@ -94,7 +94,10 @@ class Scene extends Physijs.Scene {
       this.bullets.reload();
     }
     if (!this.moveController.disparando) {
-      this.bullets.dispara(this.index, this.avatar.getPosition(), this.camera.getWorldDirection(), this.avatar.getActiveWeapon());
+      this.bullets.shot(this.index,
+        this.avatar.getPosition(),
+        this.camera.getWorldDirection(new Vector3()),
+        this.avatar.getActiveWeapon());
       this.index++;
       this.actualAmmo--;
       updateAmmo();
@@ -172,34 +175,28 @@ class Scene extends Physijs.Scene {
    */
   animate() {
     this.simulate();
-    try {
 
-      if (this.moveController.moveForward) this.avatar.moveForward();
-      if (this.moveController.moveBackward) this.avatar.moveBackward();
-      if (this.moveController.moveLeft) this.avatar.moveLeft();
-      if (this.moveController.moveRight) this.avatar.moveRight();
 
-      if (this.moveController.jumping) {
-        this.avatar.jump();
-      }
+    if (this.moveController.moveForward) this.avatar.moveForward();
+    if (this.moveController.moveBackward) this.avatar.moveBackward();
+    if (this.moveController.moveLeft) this.avatar.moveLeft();
+    if (this.moveController.moveRight) this.avatar.moveRight();
 
-      if (this.moveController.disparando) {
-        this.avatar.animateWeapon();
-      }
-
-      this.avatar.updateControls();
-
-      this.enemies.animate();
-
-      if (this.actualAmmo == 0) {
-        this.endGame();
-      }
-    } catch (error) {
-      //console.log(this.avatar);
-      console.log(error.toString());
-      //console.log(this.avatar.moveForward);
+    if (this.moveController.jumping) {
+      this.avatar.jump();
     }
 
+    if (this.moveController.disparando) {
+      this.avatar.animateWeapon();
+    }
+
+    this.avatar.updateControls();
+
+    this.enemies.animate();
+
+    if (this.actualAmmo == 0) {
+      this.endGame();
+    }
   }
 
   changeWeapon() {
@@ -264,7 +261,7 @@ class Scene extends Physijs.Scene {
     this.createEnemies();
   }
 
-  updateScore(score){
+  updateScore(score) {
     this.score += score;
     updateScore(this.score);
   }

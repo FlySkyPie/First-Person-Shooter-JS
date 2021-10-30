@@ -1,7 +1,6 @@
 import {
     Vector3, SphereGeometry,
 } from 'three';
-import PhysijsWorker from 'physijs-webpack/physijs/physijs_worker'
 import { SphereMesh, Scene } from 'physijs-webpack/webpack'
 
 //import { SphereMesh, Scene } from 'physijs'
@@ -23,6 +22,9 @@ class Bullets {
         this.material = aMaterial;
         this.objWidth = 1;
         this.maxBullets = maxBullets;
+        /**
+         * @type {SphereMesh[]}
+         */
         this.bullets = [];
         this.launched = [];
         this.target = [];
@@ -74,7 +76,7 @@ class Bullets {
         this.bullets[i].__dirtyPosition = true;
     }
 
-    dispara(i, position, target, weapon) {
+    shot(i, position, target, weapon) {
         this.target[i].set(target.x, target.y, target.z);
         this.bullets[i].position.set(position.x - target.x, position.y + 5, position.z - target.z);
 
@@ -85,23 +87,17 @@ class Bullets {
         this.bullets[i].__dirtyPosition = true;
         this.launched[i] = true;
 
-        let potencia = null;
-        let sound = null;
+        const bulletInfo = (weapon === 0) ? {
+            power: 35000,
+            sound: new Howl({ src: ['sounds/m4a1_s.mp3'], volume: 0.1 }),
+        } : {
+            power: 50000,
+            sound: new Howl({ src: ['sounds/escopeta.mp3'], volume: 0.1 })
+        };
 
-        if (weapon == 0) {
-            potencia = 35000;
-            sound = new Howl({
-                src: ['sounds/m4a1_s.mp3'], volume: 0.1
-            });
-        }
-        else if (weapon == 1) {
-            potencia = 50000;
-            sound = new Howl({
-                src: ['sounds/escopeta.mp3'], volume: 0.1
-            });
-        }
+        const { power, sound } = bulletInfo;
 
-        const fuerza = new Vector3(this.target[i].x * potencia, this.target[i].y * potencia, this.target[i].z * potencia);
+        const fuerza = new Vector3(this.target[i].x * power, this.target[i].y * power, this.target[i].z * power);
         this.bullets[i].applyCentralImpulse(fuerza);
 
         sound.play();
