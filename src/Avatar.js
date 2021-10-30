@@ -134,7 +134,7 @@ class Avatar {
                 else this.rifle.rotation.x += 0.1;
             } else {
                 if (this.rifle.rotation.x >= 0 && this.rifle.rotation.x <= 0.1) {
-                    disparando = false;
+                    this.moveController.disparando = false;
                     this.recoil = true;
                 } else this.rifle.rotation.x -= 0.1;
             }
@@ -144,7 +144,7 @@ class Avatar {
                 else this.shotgun.rotation.x += 0.1;
             } else {
                 if (this.shotgun.rotation.x >= 0 && this.shotgun.rotation.x <= 0.1) {
-                    disparando = false;
+                    this.moveController.disparando = false;
                     this.recoil = true;
                 } else this.shotgun.rotation.x -= 0.1;
             }

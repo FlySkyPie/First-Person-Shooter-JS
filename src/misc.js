@@ -1,17 +1,18 @@
-export const updateAmmo = () => {
+let actualAmmo = 0, score = 0, level = 0;
+
+export const updateAmmo = (newAmmo) => {
     const text = document.getElementById("ammo");
-    text.innerHTML = "Munición: " + this.actualAmmo;
+    text.innerHTML = "Munición: " + newAmmo;
 }
 
 export const updateScore = (newScore) => {
     const text = document.getElementById("score");
-    this.score += newScore;
-    text.innerHTML = "Puntuacion: " + this.score;
+    text.innerHTML = "Puntuacion: " + newScore;
 }
 
-export const updateLevel = () => {
+export const updateLevel = (newLevel) => {
     const level = document.getElementById("level");
-    level.innerHTML = "Nivel: " + this.level;
+    level.innerHTML = "Nivel: " + newLevel;
 }
 
 export const createHUDElement = () => {

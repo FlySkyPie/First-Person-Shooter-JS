@@ -88,7 +88,7 @@ function onMouseDown(event) {
     if (enableControls) {
         if (event.buttons == 1 && blocker.style.display == 'none') {
             scene.dispara();
-            disparando = true;
+            moveController.disparando = true;
         }
     }
 }

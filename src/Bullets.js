@@ -85,8 +85,8 @@ class Bullets {
         this.bullets[i].__dirtyPosition = true;
         this.launched[i] = true;
 
-        const potencia = null;
-        const sound = null;
+        let potencia = null;
+        let sound = null;
 
         if (weapon == 0) {
             potencia = 35000;

@@ -46,9 +46,14 @@ class Scene extends Physijs.Scene {
     this.map = null;
     this.enemies = new Enemies(this, this.level);
     this.skybox = null;
-    this.Bullets = this.createBullets();
-    this.index = 0;
+
     this.maxBullets = 20;
+    /**
+     * @type {Bullets}
+     */
+    this.bullets = this.createBullets(this.maxBullets);
+    this.index = 0;
+    
     this.actualAmmo = 40; //Balas totales antes de acabar el juego
     this.score = 0;
     this.lastScore = 0;
@@ -88,7 +93,7 @@ class Scene extends Physijs.Scene {
       this.index = 0;
       this.bullets.reload();
     }
-    if (!disparando) {
+    if (!this.moveController.disparando) {
       this.bullets.dispara(this.index, this.avatar.getPosition(), this.camera.getWorldDirection(), this.avatar.getActiveWeapon());
       this.index++;
       this.actualAmmo--;
@@ -249,7 +254,7 @@ class Scene extends Physijs.Scene {
     this.actualAmmo = 40;
     updateAmmo();
     this.score = 0;
-    updateScore(0);
+    updateScore(this.score);
     this.level = 1;
     updateLevel();
 
@@ -258,6 +263,12 @@ class Scene extends Physijs.Scene {
     }
     this.createEnemies();
   }
+
+  updateScore(score){
+    this.score += score;
+    updateScore(this.score);
+  }
+
 }
 
 export default Scene;
