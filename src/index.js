@@ -4,6 +4,7 @@ import Stats from 'stats.js';
 import Scene from './Scene';
 import { createHUDElement } from './misc';
 import { PointerLockControls } from './lib/PointerLockControls';
+import MoveController from './MoveController';
 
 const { ammoElement, levelElement, scoreElement } = createHUDElement();
 
@@ -23,16 +24,21 @@ var stats = null;
 /// A boolean to know if the left button of the mouse is down
 var mouseDown = false;
 
+/**
+ * Store movemnt stats.
+ */
+const moveController = new MoveController();
+
 var renderer = null;
 
 var camera = null;
 var controls = null;
-var moveForward = false;
+/*var moveForward = false;
 var moveBackward = false;
 var moveLeft = false;
 var moveRight = false;
 var jumping = false;
-var disparando = false;
+var disparando = false;/** */
 var enableControls = true; //habilita la entrada de datos por ratón y teclado
 
 
@@ -97,30 +103,30 @@ function onKeyDown(event) {
 
             case 38: // up
             case 87: // w
-                moveForward = true;
+                moveController.moveForward = true;
                 break;
 
             case 37: // left
             case 65: // a
-                moveLeft = true;
+                moveController.moveLeft = true;
                 break;
 
             case 40: // down
             case 83: // s
-                moveBackward = true;
+                moveController.moveBackward = true;
                 break;
 
             case 39: // right
             case 68: // d
-                moveRight = true;
+                moveController.moveRight = true;
                 break;
 
             case 32: // space
-                jumping = true;
+                moveController.jumping = true;
                 break;
 
             case 81: // q
-                if (!disparando) scene.changeWeapon();
+                if (!moveController.disparando) scene.changeWeapon();
                 break;
         }
     }
@@ -139,22 +145,22 @@ function onKeyUp(event) {
         switch (event.keyCode) {
             case 38: // up
             case 87: // w
-                moveForward = false;
+                moveController.moveForward = false;
                 break;
 
             case 37: // left
             case 65: // a
-                moveLeft = false;
+                moveController.moveLeft = false;
                 break;
 
             case 40: // down
             case 83: // s
-                moveBackward = false;
+                moveController.moveBackward = false;
                 break;
 
             case 39: // right
             case 68: // d
-                moveRight = false;
+                moveController.moveRight = false;
                 break;
         }
     }
@@ -167,7 +173,7 @@ function onKeyUp(event) {
  */
 function onMouseWheel(event) {
     if (enableControls) {
-        if (!disparando) scene.changeWeapon();
+        if (!moveController.disparando) scene.changeWeapon();
     }
 }
 
@@ -295,7 +301,7 @@ function render() {
 
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     controls = new PointerLockControls(camera);
-    scene = new Scene(renderer.domElement, camera, controls);
+    scene = new Scene(renderer.domElement, camera, controls, moveController);
 
     scene.add(controls.getObject());
 

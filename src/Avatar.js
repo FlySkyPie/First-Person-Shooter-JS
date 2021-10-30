@@ -12,11 +12,13 @@ class Avatar {
 
     /**
      * 
-     * @param {*} camera 
-     * @param {*} scene 
-     * @param {*} controls 
+     * @param {THREE.Camera} camera 
+     * @param {Scene} scene 
+     * @param {PointerLockControls} controls 
+     * @param {MoveController} moveController
      */
-    constructor(camera, scene, controls) {
+    constructor(camera, scene, controls, moveController) {
+        this.moveController = moveController;
 
         var mat = Physijs.createMaterial(new THREE.MeshPhongMaterial({ color: 0x000000 }), 1, 0);
         this.avatar = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5), mat);
@@ -59,18 +61,18 @@ class Avatar {
             else this.avatar.position.y += 0.5;
         } else {
             if (this.avatar.position.y >= 2 && this.avatar.position.y <= 2.5) {
-                jumping = false;
+                this.moveController.jumping = false;
                 this.goingUp = true;
             } else this.avatar.position.y -= 0.5;
         }
     }
 
     updateControls() {
-        controls.getObject().position.set(this.avatar.position.x, this.avatar.position.y + 5, this.avatar.position.z);
+        this.controls.getObject().position.set(this.avatar.position.x, this.avatar.position.y + 5, this.avatar.position.z);
     }
 
     moveForward() {
-        var target = this.camera.getWorldDirection();
+        var target = this.camera.getWorldDirection(new THREE.Vector3());
         var nextPosition = target.x + this.avatar.position.x;
         if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
             this.avatar.translateX(target.x);
@@ -80,7 +82,7 @@ class Avatar {
     }
 
     moveBackward() {
-        var target = this.camera.getWorldDirection();
+        var target = this.camera.getWorldDirection(new THREE.Vector3());
         var nextPosition = -target.x + this.avatar.position.x;
         if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
             this.avatar.translateX(-target.x);
@@ -90,7 +92,7 @@ class Avatar {
     }
 
     moveLeft() {
-        var target = this.camera.getWorldDirection();
+        var target = this.camera.getWorldDirection(new THREE.Vector3());
         var nextPosition = target.z + this.avatar.position.x;
         if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
             this.avatar.translateX(target.z);
@@ -100,7 +102,7 @@ class Avatar {
     }
 
     moveRight() {
-        var target = this.camera.getWorldDirection();
+        var target = this.camera.getWorldDirection(new THREE.Vector3());
         var nextPosition = -target.z + this.avatar.position.x;
         if (nextPosition <= this.posLimite && nextPosition >= -this.posLimite)
             this.avatar.translateX(-target.z);

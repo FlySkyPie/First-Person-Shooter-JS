@@ -24,8 +24,9 @@ class Scene extends Physijs.Scene {
    * @param {THREE.WebGLRenderer} renderer 
    * @param {THREE.PerspectiveCamera} aCamera 
    * @param {PointerLockControls} controls
+   * @param {MoveController} moveController
    */
-  constructor(renderer, aCamera, controls) {
+  constructor(renderer, aCamera, controls, moveController) {
     super();
     this.setGravity(new Vector3(0, -50, 0));
 
@@ -33,9 +34,11 @@ class Scene extends Physijs.Scene {
      * @type {THREE.PerspectiveCamera}
      */
     this.camera = aCamera;
+
+    this.controls = controls;
     this.createCrosshair(renderer);
 
-    this.avatar = new Avatar(this.camera, this, controls);
+    this.avatar = new Avatar(this.camera, this, controls, moveController);
 
     /**
      * @type {Map}
@@ -50,6 +53,8 @@ class Scene extends Physijs.Scene {
     this.score = 0;
     this.lastScore = 0;
     this.level = 1;
+
+    this.moveController = moveController;
 
     this.avatar.loadWeapons();
     this.place = this.createPlace();
@@ -140,13 +145,15 @@ class Scene extends Physijs.Scene {
 
   endGame() {
     enableControls = false;
-    controls.enabled = false;
+    this.controls.enabled = false;
 
-    moveForward = false;
-    moveBackward = false;
-    moveLeft = false;
-    moveRight = false;
-    jumping = false;
+    this.moveController.reset()
+
+    /*this.moveForward = false;
+    this.moveBackward = false;
+    this.moveLeft = false;
+    this.moveRight = false;
+    this.jumping = false;/** */
 
     blocker.style.display = 'block';
     instructions.style.display = '';
@@ -161,29 +168,31 @@ class Scene extends Physijs.Scene {
   animate() {
     this.simulate();
     try {
-      
-    if (moveForward) this.avatar.moveForward();
-    if (moveBackward) this.avatar.moveBackward();
-    if (moveLeft) this.avatar.moveLeft();
-    if (moveRight) this.avatar.moveRight();
 
-    if (jumping) {
-      this.avatar.jump();
-    }
+      if (this.moveController.moveForward) this.avatar.moveForward();
+      if (this.moveController.moveBackward) this.avatar.moveBackward();
+      if (this.moveController.moveLeft) this.avatar.moveLeft();
+      if (this.moveController.moveRight) this.avatar.moveRight();
 
-    if (disparando) {
-      this.avatar.animateWeapon();
-    }
+      if (this.moveController.jumping) {
+        this.avatar.jump();
+      }
 
-    this.avatar.updateControls();
+      if (this.moveController.disparando) {
+        this.avatar.animateWeapon();
+      }
 
-    this.enemies.animate();
+      this.avatar.updateControls();
 
-    if (this.actualAmmo == 0) {
-      this.endGame();
-    }
+      this.enemies.animate();
+
+      if (this.actualAmmo == 0) {
+        this.endGame();
+      }
     } catch (error) {
-      console.log(this.avatar);
+      //console.log(this.avatar);
+      console.log(error.toString());
+      //console.log(this.avatar.moveForward);
     }
 
   }
@@ -235,7 +244,7 @@ class Scene extends Physijs.Scene {
   newGame() {
     blocker.style.display = 'none';
     enableControls = true;
-    controls.enabled = true;
+    this.controls.enabled = true;
     this.avatar.setInitialPosition();
     this.actualAmmo = 40;
     updateAmmo();
