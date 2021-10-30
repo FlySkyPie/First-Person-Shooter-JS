@@ -1,6 +1,12 @@
 # First Person Shooter with JS
 
-### A simple FPS game made in JavaScript using THREE.js, Physijs... with the purpose of learning a little bit of these libraries
+## ⚠️incomplete ⚠️
+
+The promram is incomplete.
+
+This project is fork from [davidinfante/First-Person-Shooter-JS](https://github.com/davidinfante/First-Person-Shooter-JS), and trying migrate it to modern js (with npm, webpack...), but looks ammo.js didn't load properly, bullets and targets can't move.
+
+## A simple FPS game made in JavaScript using THREE.js, Physijs... with the purpose of learning a little bit of these libraries
 
 ## Development
 
