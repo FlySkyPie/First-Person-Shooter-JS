@@ -160,7 +160,8 @@ class Scene extends Physijs.Scene {
    */
   animate() {
     this.simulate();
-
+    try {
+      
     if (moveForward) this.avatar.moveForward();
     if (moveBackward) this.avatar.moveBackward();
     if (moveLeft) this.avatar.moveLeft();
@@ -181,6 +182,10 @@ class Scene extends Physijs.Scene {
     if (this.actualAmmo == 0) {
       this.endGame();
     }
+    } catch (error) {
+      console.log(this.avatar);
+    }
+
   }
 
   changeWeapon() {

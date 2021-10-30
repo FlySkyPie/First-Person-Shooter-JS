@@ -1,8 +1,7 @@
-import {
-    MeshPhongMaterial, BoxGeometry, Mesh, Vector3, ObjectLoader, ImageUtils,
-    MeshLambertMaterial,
-} from 'three';
+import * as THREE from 'three';
 import MTLLoader from 'three-mtl-loader';
+//import OBJLoader from 'three-obj-loader';
+import { OBJLoader } from '@hbis/three-obj-mtl-loader'
 import Physijs from 'physijs-webpack';
 
 /**
@@ -19,8 +18,8 @@ class Avatar {
      */
     constructor(camera, scene, controls) {
 
-        var mat = Physijs.createMaterial(new MeshPhongMaterial({ color: 0x000000 }), 1, 0);
-        this.avatar = new Mesh(new BoxGeometry(5, 5, 5), mat);
+        var mat = Physijs.createMaterial(new THREE.MeshPhongMaterial({ color: 0x000000 }), 1, 0);
+        this.avatar = new THREE.Mesh(new THREE.BoxGeometry(5, 5, 5), mat);
         this.avatar.material.transparent = true;
         this.avatar.material.opacity = 0.0;
         this.avatar.position.y = 2.5;
@@ -39,7 +38,7 @@ class Avatar {
     }
 
     getPosition() {
-        var pos = new Vector3();
+        var pos = new THREE.Vector3();
         pos.x = this.avatar.position.x;
         pos.y = this.avatar.position.y;
         pos.z = this.avatar.position.z;
@@ -155,7 +154,7 @@ class Avatar {
         var that = this;
 
         var mtlLoader = new MTLLoader();
-        var objLoader = new ObjectLoader();
+        var objLoader = new OBJLoader();
         var texture = null;
 
         mtlLoader.setPath("models/");
@@ -165,8 +164,8 @@ class Avatar {
             objLoader.setMaterials(materials);
             objLoader.setPath("models/");
             objLoader.load("m4a1_s.obj", function (object) {
-                texture = ImageUtils.loadTexture('models/m4a1_stext.png');
-                object.children[1].material = new MeshLambertMaterial({ map: texture });
+                texture = THREE.ImageUtils.loadTexture('models/m4a1_stext.png');
+                object.children[1].material = new THREE.MeshLambertMaterial({ map: texture });
                 //m4a1_s
                 object.children[1].position.set(0, 0, 0);
                 object.children[1].scale.set(0.2, 0.2, 0.2);
@@ -186,8 +185,8 @@ class Avatar {
             objLoader.setMaterials(materials);
             objLoader.setPath("models/");
             objLoader.load("escopeta.obj", function (object) {
-                texture = ImageUtils.loadTexture('models/escopetatext.png');
-                object.children[0].material = new MeshLambertMaterial({ map: texture });
+                texture = THREE.ImageUtils.loadTexture('models/escopetatext.png');
+                object.children[0].material = new THREE.MeshLambertMaterial({ map: texture });
 
                 //Escopeta
                 object.children[0].position.set(0, 0, 0);
