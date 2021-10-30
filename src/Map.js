@@ -1,7 +1,7 @@
 import {
   BoxGeometry, Matrix4, TextureLoader, MeshPhongMaterial, CylinderGeometry,
 } from 'three';
-import { BoxMesh, createMaterial, CylinderMesh } from 'physijs-webpack/browserify'
+import { BoxMesh, createMaterial, CylinderMesh } from 'physijs-webpack/webpack'
 //import { BoxMesh, createMaterial, CylinderMesh } from 'physijs'
 /**
  * The Map class

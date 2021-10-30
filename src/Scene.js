@@ -1,7 +1,7 @@
 import {
   TextureLoader, MeshPhongMaterial, Vector3, AmbientLight, SpotLight, Object3D
 } from 'three';
-import Physijs from 'physijs-webpack/browserify';
+import * as Physijs from 'physijs-webpack/browserify';
 //import Physijs from 'physijs'
 
 import Avatar from './Avatar';
@@ -23,8 +23,9 @@ class Scene extends Physijs.Scene {
    * 
    * @param {THREE.WebGLRenderer} renderer 
    * @param {THREE.PerspectiveCamera} aCamera 
+   * @param {PointerLockControls} controls
    */
-  constructor(renderer, aCamera) {
+  constructor(renderer, aCamera, controls) {
     super();
     this.setGravity(new Vector3(0, -50, 0));
 
@@ -34,7 +35,7 @@ class Scene extends Physijs.Scene {
     this.camera = aCamera;
     this.createCrosshair(renderer);
 
-    this.avatar = new Avatar(this.camera, this);
+    this.avatar = new Avatar(this.camera, this, controls);
 
     /**
      * @type {Map}

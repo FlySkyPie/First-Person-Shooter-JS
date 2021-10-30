@@ -61,7 +61,7 @@ function initStats() {
     stats.dom.style.left = '0px';
     stats.dom.style.top = '0px';
 
-    document.querySelector('#Stats-output').appendChild()
+    document.querySelector('#Stats-output').appendChild(stats.dom)
 
     return stats;
 }
@@ -294,8 +294,9 @@ function render() {
     window.addEventListener("DOMMouseScroll", onMouseWheel, true); // For Firefox
 
     // create a scene, that will hold all our elements such as objects, cameras and lights.
-    scene = new Scene(renderer.domElement, camera);
     controls = new PointerLockControls(camera);
+    scene = new Scene(renderer.domElement, camera, controls);
+
     scene.add(controls.getObject());
 
     createGUI(true);

@@ -1,7 +1,9 @@
 import {
     Vector3, SphereGeometry,
 } from 'three';
-import { SphereMesh, Scene } from 'physijs-webpack/browserify'
+import PhysijsWorker from 'physijs-webpack/physijs/physijs_worker'
+import { SphereMesh, Scene } from 'physijs-webpack/webpack'
+
 //import { SphereMesh, Scene } from 'physijs'
 import { Howl } from 'howler';
 

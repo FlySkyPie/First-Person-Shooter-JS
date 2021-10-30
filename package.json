@@ -38,12 +38,15 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.15.4",
+    "babel-eslint": "^10.1.0",
+    "eslint-loader": "^4.0.2",
     "howler": "^2.2.3",
     "physijs": "^1.0.4",
     "physijs-webpack": "^0.1.4",
     "stats.js": "^0.17.0",
-    "three": "^0.134.0",
+    "three": "^0.73.2",
     "three-mtl-loader": "^1.0.2",
+    "webworkify-webpack": "^2.1.5",
     "worker-loader": "^3.0.8"
   }
 }

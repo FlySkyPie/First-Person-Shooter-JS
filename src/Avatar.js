@@ -3,6 +3,7 @@ import {
     MeshLambertMaterial,
 } from 'three';
 import MTLLoader from 'three-mtl-loader';
+import Physijs from 'physijs-webpack';
 
 /**
  * The Avatar class
@@ -10,7 +11,13 @@ import MTLLoader from 'three-mtl-loader';
  */
 class Avatar {
 
-    constructor(camera, scene) {
+    /**
+     * 
+     * @param {*} camera 
+     * @param {*} scene 
+     * @param {*} controls 
+     */
+    constructor(camera, scene, controls) {
 
         var mat = Physijs.createMaterial(new MeshPhongMaterial({ color: 0x000000 }), 1, 0);
         this.avatar = new Mesh(new BoxGeometry(5, 5, 5), mat);

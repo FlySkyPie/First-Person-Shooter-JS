@@ -1,5 +1,5 @@
 import {
-  BoxGeometry, Matrix4, TextureLoader, Object3D, BackSide, Mesh,
+  BoxGeometry, Matrix4, TextureLoader, Object3D, BackSide, Mesh, MeshBasicMaterial,
 } from 'three';
 
 /**
